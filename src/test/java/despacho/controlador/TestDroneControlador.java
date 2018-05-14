@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,6 +20,24 @@ import despacho.utilidad.Utilidades.Orientacion;
 public class TestDroneControlador {
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+
+	@Test
+	public void testRun() {
+		List<String> archivos = new LinkedList<>();
+		int drones = Integer.valueOf(System.getProperty("drones"));
+		for (int i = 1; i <= drones; i++) {
+			String archivoEntrada = String.format("%s%02d.%s", Utilidades.NOMBRE_ARCHIVO_ENTRADA, i,
+					Utilidades.EXTENSION_ARCHIVO);
+			String archivoSalida = String.format("%s%02d.%s", Utilidades.NOMBRE_ARCHIVO_SALIDA, i,
+					Utilidades.EXTENSION_ARCHIVO);
+			new Thread(new DroneControlador(archivoEntrada, archivoSalida)).start();
+			archivos.add(archivoSalida);
+		}
+		for (String archivo : archivos) {
+			File aO = new File(archivo);
+			assertTrue("Existe archivo salida", aO.exists());
+		}
+	}
 
 	@Test
 	public void testProcesarPedidos() {

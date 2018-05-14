@@ -15,7 +15,7 @@ import despacho.utilidad.Utilidades;
 import despacho.utilidad.Utilidades.Operacion;
 import despacho.utilidad.Utilidades.Orientacion;
 
-public class DroneControlador {
+public class DroneControlador implements Runnable {
 	/**
 	 * Clase para la administración de escritura y lectura de archivos
 	 * 
@@ -390,5 +390,10 @@ public class DroneControlador {
 			drone.setY(posicionActualY);
 		} else
 			throw new FueraDeRangoExcepcion(Utilidades.LIMITE_ENTREGA);
+	}
+
+	@Override
+	public void run() {
+		procesarPedidos();
 	}
 }
